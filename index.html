@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mood History Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    form {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #2c7be5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1a5fd0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🗓️ Mood History Log</h1>
+
+  <form id="moodForm">
+    <label for="date">Date</label>
+    <input type="date" id="date" required>
+
+    <label for="mood">Mood</label>
+    <select id="mood" required>
+      <option value="">Select mood</option>
+      <option>😊 Happy</option>
+      <option>😞 Sad</option>
+      <option>😰 Anxious</option>
+      <option>😡 Angry</option>
+      <option>😴 Tired</option>
+      <option>😌 Calm</option>
+    </select>
+
+    <label for="note">Note (optional)</label>
+    <textarea id="note" placeholder="Write anything you'd like..."></textarea>
+
+    <button type="submit">Add to Log</button>
+  </form>
+
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Mood</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Entries will go here -->
+    </tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById("moodForm");
+    const tableBody = document.querySelector("#logTable tbody");
+
+    // Load existing logs from localStorage
+    const logs = JSON.parse(localStorage.getItem("moodLogs")) || [];
+    renderTable();
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const date = document.getElementById("date").value;
+      const mood = document.getElementById("mood").value;
+      const note = document.getElementById("note").value;
+
+      const entry = { date, mood, note };
+      logs.push(entry);
+      localStorage.setItem("moodLogs", JSON.stringify(logs));
+
+      form.reset();
+      renderTable();
+    });
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      logs.forEach(log => {
+        const row = `<tr>
+          <td>${log.date}</td>
+          <td>${log.mood}</td>
+          <td>${log.note || '-'}</td>
+        </tr>`;
+        tableBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+  </script>
+
+</body>
+</html>
